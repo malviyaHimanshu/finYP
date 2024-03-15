@@ -1,0 +1,25 @@
+sudo /home/ajay/go-ethereum/build/bin/geth --datadir node1 init genesis.json
+sudo /home/ajay/go-ethereum/build/bin/geth --datadir node2 init genesis.json  
+
+sudo /home/ajay/go-ethereum/build/bin/geth console --datadir node1 --networkid 1729 --nodiscover --http --http.port "8000" --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "eth,net,miner,debug,personal,rpc" --rpc.enabledeprecatedpersonal
+sudo /home/ajay/go-ethereum/build/bin/geth console --datadir node2 --networkid 1729 --port 30304 --nodiscover --http --http.port "8051" --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "eth,net,web3,miner,debug,personal,rpc"
+
+sudo /home/ajay/go-ethereum/build/bin/geth console --datadir node1 --networkid 1729 --rpc.enabledeprecatedpersonal
+sudo /home/ajay/go-ethereum/build/bin/geth console --datadir node2 --networkid 1729 --port 30304 --authrpc.port 8552 --rpc.enabledeprecatedpersonal --mine --miner.threads=1 --miner.etherbase 0xe56b88900cdee8d109540d1d9fc4e195422d9e28
+
+
+sudo geth console --datadir node1 --networkid 1729 --nodiscover --http --http.port "8000" --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "eth,net,web3,miner,debug,personal,rpc"
+sudo geth console --datadir node2 --networkid 1729 --port 30304 --nodiscover --http --http.port "8051" --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "eth,net,web3,miner,debug,personal,rpc"
+
+
+#sudo /home/ajay/go-ethereum/build/bin/geth console --datadir node2 --networkid 1729 --port 30304 --nodiscover --rpc --rpcport "8051" --rpcaddr "0.0.0.0" --rpccorsdomain "*" --rpcapi "eth,net,web3,miner,debug,personal,rpc" --unlock 0xc557b3c60327e793b5c6bec09b8735ced5e0cab9 --password password.txt --mine --miner.threads=1
+
+
+admin.addPeer("enode://ba0b356c25fe16229ab12b6e21a338475bd8038586ac359d632b091e0454215196e741029343e6e2d39467041f7e371b6cb16741fe584d7713b4d38d6f955835@127.0.0.1:30304")
+miner.setEtherbase("0x251fa630b1f31e1f9b5ad9ac14b961b13e768882")
+miner.start()
+eth.sendTransaction({from: eth.accounts[0], to: 0xe56b88900cdee8d109540d1d9fc4e195422d9e28, value:814000000000000000000})
+miner.setEtherbase("0xe56b88900cdee8d109540d1d9fc4e195422d9e28")
+
+solc --optimize --abi --bin ./Audit.sol -o build --overwrite
+/home/ajay/go-ethereum/build/bin/abigen --abi=./build/Audit.abi --bin=./build/Audit.bin --pkg=audit --out=audit-binding.go
